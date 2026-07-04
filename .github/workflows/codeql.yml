@@ -1,0 +1,37 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '27 4 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze (java-kotlin)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          language: java-kotlin
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      # Kotlin needs a traced build (build-mode none is Java-only). --rerun-tasks forces a real
+      # compile so CodeQL traces it even when the Gradle cache would mark tasks up-to-date.
+      - name: Compile
+        run: ./gradlew compileTestKotlin --no-daemon --rerun-tasks
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

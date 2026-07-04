@@ -1,0 +1,6 @@
+# jitpack builds this pure-JVM lib on demand from any tag/branch/commit and serves it as
+#   com.github.capullo-tech:capullo-audio-contracts:<tag|branch-SNAPSHOT|commit>
+jdk:
+  - openjdk17
+install:
+  - ./gradlew publishToMavenLocal -x test
