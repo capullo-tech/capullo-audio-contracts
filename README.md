@@ -38,3 +38,7 @@ surface is deliberate.
 `tech.capullo.audio:capullo-audio-contracts` (published via jitpack as
 `com.github.capullo-tech.capullo-audio-contracts:<tag>` for releases; use a Gradle composite
 build for local co-development).
+
+## License
+
+Copyright 2026 capullo-tech. Licensed under GPLv3 - see [`LICENSE`](LICENSE).
