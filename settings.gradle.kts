@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     // Import the org-wide shared catalog as `libs`.
     versionCatalogs {
         create("libs") {
-            from("com.github.capullo-tech:build-conventions:a8439c66c46c7228e2be5fdc92e1a10e2fc693c0")
+            from("com.github.capullo-tech:build-conventions:22483910a0cd6d7e583ec3d268ad1c8f872bb4ba")
         }
     }
 }
