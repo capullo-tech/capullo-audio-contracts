@@ -1,7 +1,7 @@
 package tech.capullo.audio.contracts
 
 /**
- * THE INTEGRATOR SEAM - the only structural difference between the apps.
+ * THE SOURCE SEAM - the only structural difference between the apps.
  *
  * A source library implements this to feed the shared delivery engine. The engine owns the
  * player (ExoPlayer + FIFO sink + Snapserver); the source only *resolves* items and *observes*

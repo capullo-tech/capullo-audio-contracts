@@ -1,17 +1,40 @@
 # capullo-audio-contracts
 
-The **SPI (contract layer)** of the [Capullo Audio Platform](https://github.com/capullo-tech).
+The **SPI** of the [Capullo Audio Platform](https://github.com/capullo-tech).
 A tiny, **pure-Kotlin/JVM** library of interfaces that decouple *who produces audio + metadata*
 (source libraries) from *who delivers it* (`capullo-audio`, the engine).
 
 No Android types. No Media3. No DI framework. Only `kotlinx-coroutines-core` (for `StateFlow`).
 This is the stability anchor of the platform - it changes rarely and deliberately (SemVer).
 
+## Platform shape
+
+This repo is the hub. The engine and the sources are **siblings** - both depend on this SPI and
+never on each other. Apps are the only thing that sees both, and they wire them together.
+
+```
+              capullo-audio-contracts          ← the SPI (this repo)
+                 ▲                ▲
+                 │                │
+          capullo-audio      capullo-source-*   ← siblings, mutually unaware
+          (the engine)       (telegram, radiobrowser)
+                 ▲                ▲
+                 └────────┬───────┘
+                  telecloud-radio / quantumcast ← apps wire engine + source
+```
+
+Prebuilt native AARs (`lib-snapcast-android`, `lib-tdlib-android`, `lib-media3-ffmpeg-android`) are
+leaf dependencies of whichever library needs them - the engine takes snapcast + ffmpeg, the Telegram
+source takes tdlib. They are jitpack-only and never built from source in a consumer.
+
+The roles are named, not numbered: **SPI**, **engine**, **source**, **app**, **native prebuilt**.
+Adding a source adds a sibling, not a level.
+
 ## What's in here
 
 | Type | Role |
 |---|---|
-| `MediaSourceProvider` | **the integrator seam** - resolve a logical id → `MediaRequest`; expose the queue; receive prefetch signals |
+| `MediaSourceProvider` | **the source seam** - resolve a logical id → `MediaRequest`; expose the queue; receive prefetch signals |
 | `MediaRequest` | neutral playable descriptor (uri + mime hint + headers); the engine turns it into a Media3 `MediaItem` |
 | `NowPlaying` | immutable now-playing snapshot the engine publishes to web players / snapclients |
 | `NowPlayingSource` | exposes `StateFlow<NowPlaying>` |
