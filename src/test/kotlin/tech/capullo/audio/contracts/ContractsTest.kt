@@ -30,10 +30,13 @@ class ContractsTest {
     }
 
     /** A trivial in-memory source proves the SPI is implementable and internally consistent. */
-    private class FakeSource(private val urls: List<String>) : MediaSourceProvider, NowPlayingSource {
-        private val _now = MutableStateFlow(NowPlaying.EMPTY)
-        override val nowPlaying: StateFlow<NowPlaying> get() = _now
-        var lastPrefetch: Int = -1; private set
+    private class FakeSource(private val urls: List<String>) :
+        MediaSourceProvider,
+        NowPlayingSource {
+        private val nowState = MutableStateFlow(NowPlaying.EMPTY)
+        override val nowPlaying: StateFlow<NowPlaying> get() = nowState
+        var lastPrefetch: Int = -1
+            private set
 
         override suspend fun mediaRequestFor(id: String) = MediaRequest(uri = id)
         override fun queue() = object : PlaybackQueue {
@@ -42,7 +45,9 @@ class ContractsTest {
             override val isRotating = false
             override fun idAt(index: Int) = urls.getOrNull(index)
         }
-        override fun onQueueAdvanced(currentIndex: Int) { lastPrefetch = currentIndex }
+        override fun onQueueAdvanced(currentIndex: Int) {
+            lastPrefetch = currentIndex
+        }
     }
 
     @Test

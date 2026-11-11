@@ -23,5 +23,7 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+      - name: Check spotless
+        run: ./gradlew spotlessCheck --no-daemon
       - name: Build + test (pure JVM - no Android SDK needed)
         run: ./gradlew build --no-daemon
